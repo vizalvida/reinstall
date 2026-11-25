@@ -122,7 +122,7 @@ Usage: $reinstall_____ anolis      7|8|23
                        For Linux Only:
                        [--no-cloud-kernel]         (only for Debian/Ubuntu/Alpine/openSUSE)
 
-       Manual:         https://github.com/bin456789/reinstall
+       Manual:         https://github.com/vizalvida/reinstall
 
 EOF
     exit 1
@@ -1063,13 +1063,23 @@ find_windows_iso() {
         ;;
     esac
 
-    # Cek iso-config.sh dari repo pribadi terlebih dahulu
+    # Cek iso-config.sh dari repo pribadi terlebih dahulu (untuk bahasa Inggris / default)
     local custom_iso_cfg
-    if custom_iso_cfg=$(curl -fsSL "$confhome/iso-config.sh" 2>/dev/null); then
+    if { [ "$lang" = "en-us" ] || [ "$lang" = "en" ]; } &&
+        custom_iso_cfg=$(curl -fsSL "$confhome/iso-config.sh" 2>/dev/null); then
         eval "$custom_iso_cfg"
         local matched_iso=""
         case "$version" in
-        7) [ "$arch_win" = x86 ] && matched_iso="$WIN_7_X86_ISO" || matched_iso="$WIN_7_X64_ISO" ;;
+        7)
+            if [ "$arch_win" = x86 ]; then
+                matched_iso="$WIN_7_X86_ISO"
+            elif [ -n "$WIN_7_X64_ISO" ]; then
+                matched_iso="$WIN_7_X64_ISO"
+            elif [ -n "$WIN_7_X86_ISO" ]; then
+                echo "WIN_7_X64_ISO is empty, using 32-bit WIN_7_X86_ISO."
+                matched_iso="$WIN_7_X86_ISO"
+            fi
+            ;;
         8) matched_iso="$WIN_8_ISO" ;;
         8.1) matched_iso="$WIN_81_ISO" ;;
         10)
@@ -1362,13 +1372,23 @@ get_windows_iso_link() {
                 grep -Ei -v '_lts[bc]_'
             fi >$tmp/win.list
 
-        # Cek iso-config.sh dari repo pribadi terlebih dahulu
+        # Cek iso-config.sh dari repo pribadi terlebih dahulu (untuk bahasa Inggris / default)
     local custom_iso_cfg
-    if custom_iso_cfg=$(curl -fsSL "$confhome/iso-config.sh" 2>/dev/null); then
+    if { [ "$lang" = "en-us" ] || [ "$lang" = "en" ]; } &&
+        custom_iso_cfg=$(curl -fsSL "$confhome/iso-config.sh" 2>/dev/null); then
         eval "$custom_iso_cfg"
         local matched_iso=""
         case "$version" in
-        7) [ "$arch_win" = x86 ] && matched_iso="$WIN_7_X86_ISO" || matched_iso="$WIN_7_X64_ISO" ;;
+        7)
+            if [ "$arch_win" = x86 ]; then
+                matched_iso="$WIN_7_X86_ISO"
+            elif [ -n "$WIN_7_X64_ISO" ]; then
+                matched_iso="$WIN_7_X64_ISO"
+            elif [ -n "$WIN_7_X86_ISO" ]; then
+                echo "WIN_7_X64_ISO is empty, using 32-bit WIN_7_X86_ISO."
+                matched_iso="$WIN_7_X86_ISO"
+            fi
+            ;;
         8) matched_iso="$WIN_8_ISO" ;;
         8.1) matched_iso="$WIN_81_ISO" ;;
         10)
