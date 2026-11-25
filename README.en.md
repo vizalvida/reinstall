@@ -92,7 +92,7 @@ The system requirements for the target system are as follows:
 For server outside China:
 
 ```bash
-curl -O https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.sh || wget -O ${_##*/} $_
+curl -O https://raw.githubusercontent.com/vizalvida/reinstall/main/reinstall.sh || wget -O ${_##*/} $_
 ```
 
 For server inside China:
@@ -114,7 +114,7 @@ Due to lack of support for TLS 1.2, SHA-256, or outdated root certificates, Wind
 
 Use Internet Explorer (enable TLS 1.2 in IE's advanced settings first) to download, or use Remote Desktop to save the following two files into the same directory:
 
-- <https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.bat>
+- <https://raw.githubusercontent.com/vizalvida/reinstall/main/reinstall.bat>
 
 - <https://www.cygwin.com/setup-x86.exe>
 
@@ -374,10 +374,23 @@ bash reinstall.sh talos
   - Hyper-V Server
   - Azure Local (Azure Stack HCI)
 
-#### Method 1: Let the Script Automatically Search for ISO
+#### Method 1: Use Pre-configured ISOs (`iso-config.sh`) or Automatic Search
 
-- The script will search for ISOs from <https://ntriver.org/download-windows-office>, a site that collects official ISOs.
+- This fork reads ISO URLs and `VIRTIO_ISO_URL` directly from [`iso-config.sh`](iso-config.sh). If a version is left empty in `iso-config.sh`, it falls back to searching <https://ntriver.org/download-windows-office>.
 - Searches for 64-bit system images by default, unless `--bit 32` is specified.
+
+| OS Version | Example `--image-name` (see full `--image-name list` below) | Extra Flags |
+| --- | --- | --- |
+| Windows Server 2012 R2 | `"Windows Server 2012 R2 ServerDataCenter"` / `"Windows Server 2012 R2 ServerStandard"` | - |
+| Windows Server 2016 | `"Windows Server 2016 ServerDatacenter"` / `"Windows Server 2016 ServerStandard"` | - |
+| Windows Server 2019 | `"Windows Server 2019 ServerDatacenter"` / `"Windows Server 2019 ServerStandard"` | - |
+| Windows Server 2022 | `"Windows Server 2022 SERVERDATACENTER"` / `"Windows Server 2022 SERVERSTANDARD"` | - |
+| Windows Server 2025 | `"Windows Server 2025 SERVERDATACENTER"` / `"Windows Server 2025 SERVERSTANDARD"` | - |
+| Windows 7 (x86) | `"Windows 7 Ultimate"` | `--bit 32` |
+| Windows 10 (22H2) | `"Windows 10 Pro"` / `"Windows 10 Home"` | - |
+| Windows 11 (26H2) | `"Windows 11 Pro"` / `"Windows 11 Home"` | - |
+
+> **Tip:** If an ISO only contains 1 edition, or if you enter an unrecognized `--image-name`, the installer will automatically print all available edition names inside `sources/install.wim` via SSH/VNC so you can pick the exact one.
 
 ```bash
 bash reinstall.sh windows \
