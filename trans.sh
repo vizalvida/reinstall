@@ -2885,8 +2885,9 @@ EOF
 get_http_file_size() {
     url=$1
 
-    # 网址重定向可能得到多个 Content-Length, 选最后一个
-    wget --spider -S "$url" 2>&1 | grep 'Content-Length:' |
+    # 网址重定向可能得到多个 Content-Length, 选最后一个 (兼容 HTTP/2 小写 content-length)
+    wget --spider -S "$url" 2>&1 | tr -d '\r' |
+        grep -iE '^[[:space:]]*Content-Length:[[:space:]]*[0-9]+' |
         tail -1 | awk '{print $2}' | grep .
 }
 
@@ -3120,19 +3121,19 @@ create_part() {
 
     # shellcheck disable=SC2154
     if [ "$distro" = windows ]; then
-        if ! size_bytes=$(get_link_file_size "$iso"); then
+        if ! size_bytes=$(get_link_file_size "$iso") || [ "${size_bytes:-0}" -lt 524288000 ]; then
             # 默认值，目前最大的 iso 小于 10g
             size_bytes=$((10 * 1024 * 1024 * 1024))
         fi
 
         # 按iso容量计算分区大小
-        # 200m 用于驱动/文件系统自身占用 + pagefile
+        # 512m 用于驱动/boot.wim/文件系统自身占用 + pagefile
         # 理论上 installer 分区可以删除 boot.wim，这样就不用额外添加 200m，但是
         # 1. vista/2008 不能删除 boot.wim
         # 2. 下载镜像前不知道是 vista/2008，因为 --image-name 可以随便输入
-        # 因此还是要额外添加 200m
+        # 因此还是要额外添加缓冲空间
         # 注意这里单位要用 MiB，因为后面的 border 要以 MiB 计算
-        part_size="$((size_bytes / 1024 / 1024 + 200))MiB"
+        part_size="$((size_bytes / 1024 / 1024 + 512))MiB"
 
         apk add ntfs-3g-progs
         # 虽然ntfs3不需要fuse，但wimmount需要，所以还是要保留
