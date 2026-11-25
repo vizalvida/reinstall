@@ -9,7 +9,7 @@
 
 <a href="https://trendshift.io/repositories/14732"><img src="https://trendshift.io/api/badge/repositories/14732" alt="bin456789%2Freinstall | Trendshift" width="250" height="55"/></a>
 
-一键 VPS 系统重装脚本 [English](README.en.md)
+一键 VPS 系统重装脚本 [English](README.md)
 
 ## 介绍
 
