@@ -2,35 +2,17 @@
 
 # reinstall
 
-[![Codacy](https://img.shields.io/codacy/grade/dc679a17751448628fe6d8ac35e26eed?logo=Codacy&label=Codacy&style=flat-square)](https://app.codacy.com/gh/bin456789/reinstall/dashboard)
-[![CodeFactor](https://img.shields.io/codefactor/grade/github/bin456789/reinstall?logo=CodeFactor&logoColor=white&label=CodeFactor&style=flat-square)](https://www.codefactor.io/repository/github/bin456789/reinstall)
-[![Lines of Code](https://aschey.tech/tokei/github/bin456789/reinstall?category=code&label=Lines%20of%20Code&style=flat-square)](https://github.com/aschey/vercel-tokei)
-<!-- [![Lines of Code](https://tokei.rs/b1/github/bin456789/reinstall?category=code&label=Lines%20of%20Code&style=flat-square)](https://github.com/XAMPPRocky/tokei_rs) -->
-
-<a href="https://trendshift.io/repositories/14732"><img src="https://trendshift.io/api/badge/repositories/14732" alt="bin456789%2Freinstall | Trendshift" width="250" height="55"/></a>
-
-One-Click OS reinstallation script for VPS [中文](README.md)
+One-Click OS reinstallation script for VPS ([中文](README.zh.md))
 
 ## Introduction
 
 - One-click reinstallation to Linux: Supports 20 common distributions.
-- One-click reinstallation to Windows: Uses the official original ISO instead of custom images. Supports automatically fetch the ISO link and installs public cloud drivers like `VirtIO`.
+- One-click reinstallation to Windows: Uses official original ISOs with pre-configured links in [`iso-config.sh`](iso-config.sh) and automatic `VirtIO` driver injection.
 - Supports reinstallation in any direction, i.e., `Linux to Linux`, `Linux to Windows`, `Windows to Windows`, `Windows to Linux`
 - Automatically configures IP and intelligently sets it as static or dynamic. Supports `/32`, `/128`, `gateway outside subnet`, `IPv6 only`, `IPv4/IPv6 on different NIC`
 - Specially optimized for low-spec servers, requires less memory than the official netboot
 - Uses partition table ID to identify hard drives throughout the process, ensuring no wrong disk is written
 - Supports BIOS and EFI boot, and ARM Server
-- No homemades image included, all resources are obtained in real-time from mirror sites
-
-Buy me a milk tea:
-[![Donate](https://img.shields.io/badge/Donate-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/bin456789)
-
-[![Sponsors](https://raw.githubusercontent.com/bin456789/sponsors/refs/heads/master/sponsors.svg)](https://github.com/sponsors/bin456789)
-
-### Feedback
-
-[![GitHub Issues](https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/bin456789/reinstall/issues)
-[![Telegram Group](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/reinstall_os)
 
 ## Quick Start
 
@@ -131,16 +113,8 @@ The system requirements for the target system are as follows:
 
 ## Download (Current system is <img width="20" height="20" src="https://www.kernel.org/theme/images/logos/favicon.png" /> Linux)
 
-For server outside China:
-
 ```bash
 curl -O https://raw.githubusercontent.com/vizalvida/reinstall/main/reinstall.sh || wget -O ${_##*/} $_
-```
-
-For server inside China:
-
-```bash
-curl -O https://cnb.cool/bin456789/reinstall/-/git/raw/main/reinstall.sh || wget -O ${_##*/} $_
 ```
 
 ## Download (Current system is <img width="20" height="20" src="https://blogs.windows.com/wp-content/uploads/prod/2022/09/cropped-Windows11IconTransparent512-32x32.png" /> Windows)
@@ -164,16 +138,8 @@ To use, run the downloaded `reinstall.bat`.
 
 </details>
 
-For server outside China:
-
 ```batch
-certutil -urlcache -f -split https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.bat
-```
-
-For server inside China:
-
-```batch
-certutil -urlcache -f -split https://cnb.cool/bin456789/reinstall/-/git/raw/main/reinstall.bat
+certutil -urlcache -f -split https://raw.githubusercontent.com/vizalvida/reinstall/main/reinstall.bat
 ```
 
 ## Usage
@@ -428,9 +394,9 @@ bash reinstall.sh talos
 | Windows Server 2019 | `"Windows Server 2019 ServerDatacenter"` / `"Windows Server 2019 ServerStandard"` | - |
 | Windows Server 2022 | `"Windows Server 2022 SERVERDATACENTER"` / `"Windows Server 2022 SERVERSTANDARD"` | - |
 | Windows Server 2025 | `"Windows Server 2025 SERVERDATACENTER"` / `"Windows Server 2025 SERVERSTANDARD"` | - |
-| Windows 7 (x86) | `"Windows 7 Ultimate"` | `--bit 32` |
-| Windows 10 (22H2) | `"Windows 10 Pro"` / `"Windows 10 Home"` | - |
-| Windows 11 (26H2) | `"Windows 11 Pro"` / `"Windows 11 Home"` | - |
+| Windows 7 (x86) | `"Windows 7 Ultimate"` (or `"Windows 7 Professional"`, `"Windows 7 HomePremium"`, `"Windows 7 HomeBasic"`, `"Windows 7 Starter"`) | `--bit 32` (optional; auto-selected if x64 ISO is empty) |
+| Windows 10 (22H2 Consumer) | `"Windows 10 Pro"` / `"Windows 10 Home"` / `"Windows 10 Education"` / `"Windows 10 Pro for Workstations"` | - |
+| Windows 11 (26H2 Consumer) | `"Windows 11 Pro"` / `"Windows 11 Home"` / `"Windows 11 Education"` / `"Windows 11 Pro for Workstations"` | - |
 
 > **Tip:** If an ISO only contains 1 edition, or if you enter an unrecognized `--image-name`, the installer will automatically print all available edition names inside `sources/install.wim` via SSH/VNC so you can pick the exact one.
 
@@ -773,34 +739,3 @@ bash reinstall.sh reset
 - `--ssh-key gitlab:your_username` or `--ssh-key gl:your_username`
 - `--ssh-key /path/to/public_key`
 - `--ssh-key C:\path\to\public_key`
-
-## How to Use an Old Version
-
-According to the Law of Bug Conservation, fixing old bugs often introduces new ones.
-
-If a bug occurs, try using an older version to see if it works.
-
-Go to <https://github.com/bin456789/reinstall/commits/main> and find the old version’s `commit_id` on the right side.
-
-Replace `xxxxxxxx` in the script below with the `commit_id` of an older version and run the script.
-
-```bash
-commit_id=xxxxxxxx
-curl -O https://raw.githubusercontent.com/bin456789/reinstall/$commit_id/reinstall.sh || wget -O ${_##*/} $_
-sed -i "/^confhome.*main$/s/main/$commit_id/" reinstall.sh
-bash reinstall.sh ...
-```
-
-## How to Modify the Script for Your Own
-
-1. Fork this repository.
-2. Modify the `confhome` and `confhome_cn` at the beginning of `reinstall.sh` and `reinstall.bat`.
-3. Make changes to the other code.
-4. Download and run your `reinstall.sh` or `reinstall.bat`."
-
-## Thanks
-
-Thanks to the following businesses for providing free servers.
-
-[![Oracle Cloud](https://github.com/bin456789/reinstall/assets/7548515/8b430ed4-8344-4f96-b4da-c2bda031cc90)](https://www.oracle.com/cloud/)
-[![DartNode](https://github.com/bin456789/reinstall/assets/7548515/435d6740-bcdd-4f3a-a196-2f60ae397f17)](https://dartnode.com/)
