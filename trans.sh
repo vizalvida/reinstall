@@ -7708,6 +7708,12 @@ EOF
         info "Add drivers: Generic virtio"
         mkdir -p "$drv/virtio"
 
+        # Cek VIRTIO_ISO_URL dari iso-config.sh
+        local virtio_cfg
+        if virtio_cfg=$(wget -qO- "$confhome/iso-config.sh" 2>/dev/null); then
+            eval "$virtio_cfg"
+        fi
+
         # 要区分 win10 / win11 驱动，虽然他们的 NT 版本号都是 10.0，但驱动文件有区别
         # https://github.com/virtio-win/kvm-guest-drivers-windows/commit/9af43da9e16e2d4bf4ea4663cdc4f29275fff48f
         # vista >>> 2k8
@@ -7730,6 +7736,27 @@ EOF
                 esac
             fi
         )
+
+        if [ -n "$VIRTIO_ISO_URL" ]; then
+            info "Download virtio-win.iso from iso-config.sh"
+            if download "$VIRTIO_ISO_URL" "$drv/virtio-win.iso" false true; then
+                mount -o ro "$drv/virtio-win.iso" "$drv/virtio"
+                local use_virtio_sys="$virtio_sys"
+                if ! find "$drv/virtio" -ipath "*/$use_virtio_sys/$arch/*.inf" | grep -q . && [ "$use_virtio_sys" = 2k25 ]; then
+                    use_virtio_sys=2k22
+                fi
+                if find "$drv/virtio" -ipath "*/$use_virtio_sys/$arch/*.inf" | grep -q .; then
+                    if [ "$product_ver" = vista ]; then
+                        cp_drivers "$drv/virtio" -ipath "*/$use_virtio_sys/$arch/*" "$@" -not -ipath "*/balloon/*"
+                    else
+                        cp_drivers "$drv/virtio" -ipath "*/$use_virtio_sys/$arch/*" "$@"
+                    fi
+                    umount "$drv/virtio"
+                    return 0
+                fi
+                umount "$drv/virtio"
+            fi
+        fi
 
         # win7-drivers 分支 win7 文件夹只有一次提交，也就是 173 全家桶
         # 1. 2020.1.24 https://github.com/virtio-win/virtio-win-pkg-scripts/tree/win7-drivers/data/old-drivers/Win7
