@@ -22,7 +22,7 @@ WIN_2025_ISO="https://huggingface.co/datasets/airachan/convertVPSToRDPWithoutRes
 
 # --- Windows Client ---
 WIN_7_X86_ISO="https://huggingface.co/datasets/airachan/convertVPSToRDPWithoutRescueMode/resolve/main/image2-easyToUse/en_windows_7_ultimate_with_sp1_x86_dvd_u_677460.iso"
-WIN_7_X64_ISO=""
+WIN_7_X64_ISO="https://huggingface.co/datasets/airachan/convertVPSToRDPWithoutRescueMode/resolve/main/image2-easyToUse/en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso"
 WIN_8_ISO=""
 WIN_81_ISO=""
 WIN_10_ISO="https://huggingface.co/datasets/airachan/convertVPSToRDPWithoutRescueMode/resolve/main/image2-easyToUse/en-us_windows_10_consumer_editions_version_22h2_updated_oct_2025_x64_dvd_38efd00d.iso"
