@@ -10,7 +10,7 @@
 # Untuk Windows 8 / 8.1 / 10 / 11 / Server 2012 - 2025 (driver SHA-256)
 VIRTIO_ISO_URL="https://huggingface.co/datasets/airachan/convertVPSToRDPWithoutRescueMode/resolve/main/image2-easyToUse/virtio-win-0.1.240.iso"
 # Opsional: Khusus Windows 7 SP1 / Server 2008 R2 yang belum mendukung SHA-1 -> SHA-256 (jika kosong, otomatis pakai arsip SHA-1 bawaan skrip)
-VIRTIO_SHA1_ISO_URL=""
+VIRTIO_SHA1_ISO_URL="https://huggingface.co/datasets/airachan/convertVPSToRDPWithoutRescueMode/resolve/main/image2-easyToUse/virtio-win-0.1.173.iso"
 
 # --- Windows Server ---
 WIN_2012_ISO=""
