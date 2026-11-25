@@ -7737,9 +7737,16 @@ EOF
             fi
         )
 
-        if [ -n "$VIRTIO_ISO_URL" ]; then
+        local selected_virtio_url=""
+        if $support_sha256; then
+            selected_virtio_url="$VIRTIO_ISO_URL"
+        else
+            selected_virtio_url="$VIRTIO_SHA1_ISO_URL"
+        fi
+
+        if [ -n "$selected_virtio_url" ]; then
             info "Download virtio-win.iso from iso-config.sh"
-            if download "$VIRTIO_ISO_URL" "$drv/virtio-win.iso" false true; then
+            if download "$selected_virtio_url" "$drv/virtio-win.iso" false true; then
                 mount -o ro "$drv/virtio-win.iso" "$drv/virtio"
                 local use_virtio_sys="$virtio_sys"
                 if ! find "$drv/virtio" -ipath "*/$use_virtio_sys/$arch/*.inf" | grep -q . && [ "$use_virtio_sys" = 2k25 ]; then
