@@ -34,6 +34,48 @@ Buy me a milk tea:
 
 ## Quick Start
 
+### Simple Windows Installation Steps
+
+1. Install required tools (Debian/Ubuntu):
+
+```bash
+apt update && apt install -y curl wget gzip xz-utils
+```
+
+2. Download `reinstall.sh`:
+
+```bash
+curl -O https://raw.githubusercontent.com/vizalvida/reinstall/main/reinstall.sh || wget -O reinstall.sh https://raw.githubusercontent.com/vizalvida/reinstall/main/reinstall.sh
+```
+
+3. Run the installer (choose **one** of the options below):
+
+- **Option A — Using `--image-name` only** (automatically uses the ISO URL from [`iso-config.sh`](iso-config.sh)):
+
+```bash
+bash reinstall.sh windows \
+	--image-name "Windows Server 2012 R2 ServerDataCenter" \
+	--lang "en-us" \
+	--password "PasswordKamu123"
+```
+
+- **Option B — Using a custom `--iso` URL**:
+
+```bash
+bash reinstall.sh windows \
+	--image-name "Windows Server 2012 R2 ServerDataCenter" \
+	--iso "https://your-domain.com/win2012r2.iso" \
+	--password "PasswordKamu123"
+```
+
+4. Reboot to start the automated installation, wait 15–25 minutes, then connect via Remote Desktop (`3389`) as `Administrator`:
+
+```bash
+reboot
+```
+
+---
+
 - [Download](#download-current-system-is--linux)
 - [Feature 1. One-click reinstallation to Linux](#feature-1-install--linux)
 - [Feature 2. One-click DD Raw image to hard disk](#feature-2-dd-raw-image-to-hard-disk)
