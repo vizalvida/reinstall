@@ -6,9 +6,9 @@
 # alpine 默认没有 bash，因此 shebang 用 sh，再 exec 切换到 bash
 
 set -eE
-confhome=https://raw.githubusercontent.com/bin456789/reinstall/main
-confhome_cn=https://cnb.cool/bin456789/reinstall/-/git/raw/main
-# confhome_cn=https://www.ghproxy.cc/https://raw.githubusercontent.com/bin456789/reinstall/main
+confhome=https://raw.githubusercontent.com/vizalvida/reinstall/main
+confhome_cn=
+# confhome_cn=https://www.ghproxy.cc/https://raw.githubusercontent.com/vizalvida/reinstall/main
 
 # 用于判断 reinstall.sh 和 trans.sh 是否兼容
 SCRIPT_VERSION=4BACD833-A585-23BA-6CBB-9AA4E08E0005
@@ -1063,6 +1063,38 @@ find_windows_iso() {
         ;;
     esac
 
+    # Cek iso-config.sh dari repo pribadi terlebih dahulu
+    local custom_iso_cfg
+    if custom_iso_cfg=$(curl -fsSL "$confhome/iso-config.sh" 2>/dev/null); then
+        eval "$custom_iso_cfg"
+        local matched_iso=""
+        case "$version" in
+        7) [ "$arch_win" = x86 ] && matched_iso="$WIN_7_X86_ISO" || matched_iso="$WIN_7_X64_ISO" ;;
+        8) matched_iso="$WIN_8_ISO" ;;
+        8.1) matched_iso="$WIN_81_ISO" ;;
+        10)
+            if grep -Ewq 'ltsb|ltsc' <<<"$edition" && [ -n "$WIN_10_LTSC_ISO" ]; then
+                matched_iso="$WIN_10_LTSC_ISO"
+            else
+                matched_iso="$WIN_10_ISO"
+            fi
+            ;;
+        11) matched_iso="$WIN_11_ISO" ;;
+        2012) matched_iso="$WIN_2012_ISO" ;;
+        '2012 r2') matched_iso="$WIN_2012R2_ISO" ;;
+        2016) matched_iso="$WIN_2016_ISO" ;;
+        2019) matched_iso="$WIN_2019_ISO" ;;
+        2022) matched_iso="$WIN_2022_ISO" ;;
+        2025) matched_iso="$WIN_2025_ISO" ;;
+        esac
+        if [ -n "$matched_iso" ]; then
+            iso="$matched_iso"
+            auto_find_iso=false
+            echo "Using ISO from iso-config.sh: $iso"
+            return 0
+        fi
+    fi
+
     get_windows_iso_link
 }
 
@@ -1330,7 +1362,39 @@ get_windows_iso_link() {
                 grep -Ei -v '_lts[bc]_'
             fi >$tmp/win.list
 
-        get_windows_iso_link_inner
+        # Cek iso-config.sh dari repo pribadi terlebih dahulu
+    local custom_iso_cfg
+    if custom_iso_cfg=$(curl -fsSL "$confhome/iso-config.sh" 2>/dev/null); then
+        eval "$custom_iso_cfg"
+        local matched_iso=""
+        case "$version" in
+        7) [ "$arch_win" = x86 ] && matched_iso="$WIN_7_X86_ISO" || matched_iso="$WIN_7_X64_ISO" ;;
+        8) matched_iso="$WIN_8_ISO" ;;
+        8.1) matched_iso="$WIN_81_ISO" ;;
+        10)
+            if grep -Ewq 'ltsb|ltsc' <<<"$edition" && [ -n "$WIN_10_LTSC_ISO" ]; then
+                matched_iso="$WIN_10_LTSC_ISO"
+            else
+                matched_iso="$WIN_10_ISO"
+            fi
+            ;;
+        11) matched_iso="$WIN_11_ISO" ;;
+        2012) matched_iso="$WIN_2012_ISO" ;;
+        '2012 r2') matched_iso="$WIN_2012R2_ISO" ;;
+        2016) matched_iso="$WIN_2016_ISO" ;;
+        2019) matched_iso="$WIN_2019_ISO" ;;
+        2022) matched_iso="$WIN_2022_ISO" ;;
+        2025) matched_iso="$WIN_2025_ISO" ;;
+        esac
+        if [ -n "$matched_iso" ]; then
+            iso="$matched_iso"
+            auto_find_iso=false
+            echo "Using ISO from iso-config.sh: $iso"
+            return 0
+        fi
+    fi
+
+    get_windows_iso_link_inner
     fi
 }
 
